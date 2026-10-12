@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MentalCompanion</title>
+    <meta name="description" content="MentalCompanion extends therapy beyond the session: a clear day-to-day plan, support in the moments in between, and a therapist who knows how things went since the last session.">
+
+    <!-- Fonts: Hanken Grotesk (headings and text), Newsreader italic (accent words) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&display=swap">
+
+    <style>
+      /* Layout idea: real people first, with the product shown in their hands.
+         Bold color bands (violet, sun, mint) give the page energy; white sections let the photos breathe. */
+
+      /* ---------- 1. Colors and fonts ---------- */
+      :root {
+        --bg: #FFFFFF;
+        --soft: #F6F4FF;        /* light sections */
+        --ink: #120B33;         /* main text */
+        --muted: #4E4870;       /* secondary text */
+        --line: #E4E0F5;
+
+        --violet: #5B3DF5;      /* brand color */
+        --violet-deep: #3F22D6;
+        --sun: #FFC53D;         /* bright yellow */
+        --coral: #FF6B4A;       /* the therapy session, highlights */
+        --mint: #1CC8A0;        /* completed steps */
+        --sky: #CFE9FF;
+
+        --shadow: 0 30px 60px -24px rgba(18, 11, 51, 0.35), 0 12px 24px -12px rgba(18, 11, 51, 0.18);
+        --font-sans: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+        --font-serif: "Newsreader", Georgia, serif;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0D0A1F;
+          --soft: #151131;
+          --ink: #F3F1FF;
+          --muted: #B3ADD6;
+          --line: #2A2550;
+          --shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.7), 0 12px 24px -12px rgba(0, 0, 0, 0.5);
+          color-scheme: dark;
+        }
+      }
+
+      /* ---------- 2. Basics ---------- */
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--font-sans);
+        font-size: 1.0625rem;
+        line-height: 1.6;
+      }
+      img { display: block; max-width: 100%; }
+      .wrap { max-width: 1180px; margin-inline: auto; padding-inline: 20px; }
+      h1, h2, h3 { margin: 0; line-height: 1.02; letter-spacing: -0.035em; font-weight: 800; text-wrap: balance; }
+      h1 { font-size: clamp(3rem, 6.8vw, 5.6rem); }
+      h2 { font-size: clamp(2.2rem, 4.6vw, 3.6rem); }
+      h3 { font-size: 1.4rem; letter-spacing: -0.02em; line-height: 1.15; font-weight: 700; }
+      p, ul, ol, figure { margin: 0; }
+      .serif { font-family: var(--font-serif); font-style: italic; font-weight: 500; letter-spacing: -0.02em; }
+      .eyebrow { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--violet); }
+      a:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; border-radius: 8px; }
+
+      /* ---------- 3. Buttons ---------- */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        width: fit-content;
+        padding: 16px 26px;
+        border-radius: 999px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 0.15s, box-shadow 0.15s;
+      }
+      .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -12px rgba(18, 11, 51, 0.5); }
+      .btn-sun { background: var(--sun); color: #120B33; }
+      .btn-white { background: #FFFFFF; color: #120B33; }
+      .btn-outline { border: 2px solid rgba(255, 255, 255, 0.55); color: #FFFFFF; }
+      .btn-violet { background: var(--violet); color: #FFFFFF; }
+      .btn-small { padding: 10px 18px; font-size: 0.92rem; }
+      .arrow { transition: transform 0.15s; }
+      .btn:hover .arrow { transform: translateX(3px); }
+
+      /* ---------- 4. Hero: violet band ---------- */
+      .hero-band {
+        position: relative;
+        overflow: hidden;
+        color: #FFFFFF;
+        background:
+          radial-gradient(36rem 28rem at 90% 10%, rgba(255, 107, 74, 0.45), transparent 70%),
+          radial-gradient(30rem 26rem at 0% 100%, rgba(28, 200, 160, 0.35), transparent 70%),
+          var(--violet);
+      }
+      header .wrap { display: flex; justify-content: space-between; align-items: center; padding-block: 22px; }
+      .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; letter-spacing: -0.02em; color: #FFFFFF; text-decoration: none; }
+      .logo { width: 28px; height: 28px; flex: none; }
+
+      .hero { display: grid; gap: 56px; padding-block: 40px 96px; align-items: center; }
+      .hero-copy { display: grid; gap: 28px; }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        width: fit-content;
+        padding: 6px 14px 6px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.14);
+        font-size: 0.88rem;
+        font-weight: 600;
+      }
+      .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--sun); box-shadow: 0 0 0 4px rgba(255, 197, 61, 0.3); }
+      .hero h1 .serif { color: var(--sun); }
+      .lede { font-size: 1.25rem; color: rgba(255, 255, 255, 0.86); max-width: 32rem; }
+      .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+
+      /* Photo with the app and a support card overlapping it */
+      .stage { position: relative; padding-bottom: 40px; }
+      .hero-photo {
+        width: 100%;
+        aspect-ratio: 4 / 5;
+        object-fit: cover;
+        object-position: center 30%;
+        border-radius: 32px;
+        box-shadow: var(--shadow);
+      }
+      /* ----- The app on a phone (always light inside, like a real screen) ----- */
+      .phone {
+        position: absolute;
+        left: -32px;
+        bottom: 0;
+        width: 62%;
+        max-width: 300px;
+        padding: 10px;
+        border-radius: 48px;
+        background: #0F0A26;
+        box-shadow: var(--shadow), inset 0 0 0 2px #2B2550;
+        color: #120B33;
+        font-size: 0.8rem;
+        line-height: 1.35;
+      }
+      .screen {
+        position: relative;
+        border-radius: 38px;
+        background: #F7F6FC;
+        padding: 12px 14px 10px;
+        display: grid;
+        gap: 12px;
+        overflow: hidden;
+      }
+      .statusbar { display: flex; justify-content: space-between; align-items: center; padding: 2px 8px 0; font-size: 0.72rem; font-weight: 700; }
+      .island { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 84px; height: 24px; border-radius: 999px; background: #0F0A26; }
+      .app-head { display: flex; align-items: center; gap: 10px; }
+      .avatar { width: 34px; height: 34px; border-radius: 50%; flex: none; display: grid; place-items: center; font-weight: 800; font-size: 0.85rem; color: #FFFFFF; background: linear-gradient(135deg, #FF6B4A, #FFC53D); }
+      .app-head div { display: grid; flex: 1; min-width: 0; }
+      .app-head strong { font-size: 0.95rem; letter-spacing: -0.02em; }
+      .app-head span { font-size: 0.68rem; color: #6E6890; }
+      .bell { width: 32px; height: 32px; border-radius: 50%; background: #FFFFFF; display: grid; place-items: center; box-shadow: 0 1px 3px rgba(18, 11, 51, 0.08); }
+
+      .today {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 20px;
+        color: #FFFFFF;
+        background: linear-gradient(135deg, #5B3DF5, #8A5CFF);
+      }
+      .ring { width: 44px; height: 44px; border-radius: 50%; flex: none; display: grid; place-items: center; background: conic-gradient(#FFC53D 0 67%, rgba(255, 255, 255, 0.25) 67% 100%); }
+      .ring b { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: #6A49F7; font-size: 0.7rem; }
+      .today div { display: grid; }
+      .today strong { font-size: 0.9rem; }
+      .today span { font-size: 0.68rem; opacity: 0.85; }
+
+      .tasks { list-style: none; padding: 0; display: grid; gap: 6px; }
+      .task { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 16px; background: #FFFFFF; box-shadow: 0 1px 3px rgba(18, 11, 51, 0.06); }
+      .task-icon { width: 30px; height: 30px; border-radius: 10px; flex: none; display: grid; place-items: center; font-size: 0.85rem; }
+      .task div { display: grid; flex: 1; min-width: 0; }
+      .task strong { font-size: 0.74rem; font-weight: 600; }
+      .task span { font-size: 0.64rem; color: #6E6890; }
+      .tick { width: 20px; height: 20px; border-radius: 50%; flex: none; border: 2px solid #D9D5EC; }
+      .task.done .tick {
+        border-color: #1CC8A0;
+        background: #1CC8A0 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 13px no-repeat;
+      }
+      .task.done strong { color: #6E6890; }
+
+      .chat-label { display: flex; align-items: center; gap: 6px; font-size: 0.64rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6E6890; }
+      .msg { padding: 9px 12px; border-radius: 18px; font-size: 0.74rem; line-height: 1.4; max-width: 86%; }
+      .msg.me { justify-self: end; background: #5B3DF5; color: #FFFFFF; border-bottom-right-radius: 6px; }
+      .msg.bot { justify-self: start; background: #FFFFFF; border-bottom-left-radius: 6px; box-shadow: 0 1px 3px rgba(18, 11, 51, 0.08); }
+      .chips { display: flex; gap: 6px; }
+      .chips span { font-size: 0.66rem; font-weight: 700; padding: 6px 10px; border-radius: 999px; background: #EEEAFE; color: #5B3DF5; }
+      .chips span:first-child { background: #5B3DF5; color: #FFFFFF; }
+      .composer { display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 14px; border-radius: 999px; background: #FFFFFF; box-shadow: 0 1px 3px rgba(18, 11, 51, 0.08); font-size: 0.7rem; color: #8B86A8; }
+      .composer span { flex: 1; }
+      .mic { width: 28px; height: 28px; border-radius: 50%; background: #5B3DF5; display: grid; place-items: center; flex: none; }
+      .home-bar { width: 96px; height: 4px; border-radius: 999px; background: #120B33; justify-self: center; opacity: 0.85; }
+
+      /* ----- The recap card for the therapist, styled like a notification ----- */
+      .float {
+        position: absolute;
+        right: -20px;
+        top: 32px;
+        width: 250px;
+        padding: 12px 14px 14px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(12px);
+        color: #120B33;
+        box-shadow: var(--shadow);
+        display: grid;
+        gap: 8px;
+        font-size: 0.8rem;
+        line-height: 1.35;
+      }
+      .float-top { display: flex; align-items: center; gap: 8px; font-size: 0.66rem; color: #6E6890; }
+      .float-top .app-icon { width: 20px; height: 20px; border-radius: 6px; background: #5B3DF5; display: grid; place-items: center; }
+      .float-top b { flex: 1; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+      .float strong { font-size: 0.86rem; }
+      .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .stats p { display: grid; padding: 8px; border-radius: 12px; background: #F4F2FC; }
+      .stats b { font-size: 1.05rem; letter-spacing: -0.02em; }
+      .stats span { font-size: 0.6rem; color: #6E6890; line-height: 1.25; }
+
+      /* ---------- 5. The gap between sessions: sun band ---------- */
+      .gap-band { background: var(--sun); color: #120B33; }
+      .gap { display: grid; gap: 28px; padding-block: 80px; }
+      .gap h2 .hour { color: var(--violet-deep); }
+      .timeline { display: grid; gap: 12px; padding-top: 28px; }
+      /* Many thin lines = the days in between. A session marker sits at each end. */
+      .bar {
+        position: relative;
+        height: 64px;
+        margin-inline: 4px;
+        background: linear-gradient(90deg, rgba(18, 11, 51, 0.22) 0 45%, transparent 45%) 0 0 / calc(100% / 90) 100%;
+      }
+      .bar .session {
+        position: absolute;
+        width: 8px;
+        top: -10px;
+        bottom: -10px;
+        border-radius: 4px;
+        background: var(--violet-deep);
+      }
+      .bar .session.first { left: -4px; }
+      .bar .session.next { right: -4px; }
+      .bar .session::after {
+        position: absolute;
+        bottom: calc(100% + 8px);
+        white-space: nowrap;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--violet-deep);
+      }
+      .bar .session.first::after { content: "Session"; left: 0; }
+      .bar .session.next::after { content: "Next session"; right: 0; }
+      .gap-label { text-align: center; font-weight: 700; font-size: 0.95rem; }
+      .gap p { max-width: 44rem; font-size: 1.2rem; }
+
+      /* ---------- 6. Sections ---------- */
+      .section { display: grid; gap: 48px; padding-block: 104px; }
+      .section-head { display: grid; gap: 16px; max-width: 48rem; }
+      .section-head p { color: var(--muted); font-size: 1.15rem; }
+      .section-head h2 .serif { color: var(--violet); }
+
+      /* How it works */
+      .steps { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 20px; counter-reset: step; }
+      .step { display: grid; gap: 14px; align-content: start; padding: 28px; border-radius: 28px; background: var(--soft); }
+      .step-num { counter-increment: step; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; color: #FFFFFF; }
+      .step-num::before { content: counter(step); }
+      .step:nth-child(1) .step-num { background: var(--violet); }
+      .step:nth-child(2) .step-num { background: var(--coral); }
+      .step:nth-child(3) .step-num { background: var(--mint); }
+      .step p { color: var(--muted); }
+
+      /* Who it's for: photo cards */
+      .people { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 24px; }
+      .person { display: grid; gap: 18px; align-content: start; }
+      .person img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 28px; }
+      .person .tag {
+        width: fit-content;
+        padding: 5px 12px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #120B33;
+      }
+      .tag-violet { background: #DCD4FF; }
+      .tag-sun { background: var(--sun); }
+      .tag-mint { background: #A8F0DC; }
+      .person p { color: var(--muted); }
+      .person .gets { color: var(--ink); font-weight: 600; padding-left: 14px; border-left: 3px solid var(--coral); }
+
+      /* Commitments: mint band */
+      .trust-band { background: var(--mint); color: #08241C; }
+      .trust-band .eyebrow { color: #08241C; }
+      .trust { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; list-style: none; padding: 0; }
+      .trust li { display: grid; gap: 10px; align-content: start; padding-top: 22px; border-top: 3px solid #08241C; }
+      .trust p { color: #0E3A2E; }
+
+      /* ---------- 7. Sign-up: violet band with photo ---------- */
+      .join-band { background: var(--violet); color: #FFFFFF; }
+      .join { display: grid; gap: 40px; padding-block: 104px; align-items: center; }
+      .join-photo { width: 100%; aspect-ratio: 16 / 11; object-fit: cover; border-radius: 32px; }
+      .join-copy { display: grid; gap: 28px; }
+      .join-copy h2 .serif { color: var(--sun); }
+      .join-copy > p { color: rgba(255, 255, 255, 0.86); font-size: 1.15rem; }
+      .options { display: grid; gap: 14px; }
+      .option {
+        display: grid;
+        gap: 6px;
+        padding: 22px 24px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.12);
+      }
+      .option-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+      .option h3 { font-size: 1.35rem; }
+      .option .meta { font-size: 0.85rem; font-weight: 700; color: var(--sun); }
+      .option p { color: rgba(255, 255, 255, 0.82); }
+
+      /* ---------- 8. Footer ---------- */
+      footer .wrap { display: grid; gap: 18px; padding-block: 40px 56px; font-size: 0.95rem; color: var(--muted); }
+      .crisis { padding: 20px 24px; border-radius: 20px; background: var(--soft); color: var(--ink); border-left: 5px solid var(--coral); }
+      .credit a { color: var(--muted); }
+
+      /* ---------- 9. Wider screens ---------- */
+      @media (min-width: 960px) {
+        .hero { grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr); gap: 72px; padding-block: 48px 120px; }
+        .join { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; }
+      }
+      @media (max-width: 600px) {
+        /* On phones, the app sits below the photo, overlapping its bottom edge */
+        .stage { padding-bottom: 0; }
+        .phone { position: relative; left: auto; width: 88%; margin: -140px auto 0; }
+        .float { right: -6px; top: 16px; width: 220px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .btn, .arrow { transition: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero-band">
+      <header>
+        <div class="wrap">
+          <a class="brand" href="#">
+            <svg class="logo" viewBox="0 0 28 28" aria-hidden="true">
+              <circle cx="10" cy="14" r="9" fill="#FFC53D"></circle>
+              <circle cx="18" cy="14" r="9" fill="#FFFFFF" fill-opacity="0.85"></circle>
+            </svg>
+            MentalCompanion
+          </a>
+          <a class="btn btn-white btn-small" href="https://tally.so/r/0Q2lMy" target="_blank" rel="noopener">Join the waitlist</a>
+        </div>
+      </header>
+
+      <section class="wrap hero">
+        <div class="hero-copy">
+          <p class="status">In development · early access opening soon</p>
+          <h1>Therapy doesn't stop when the <span class="serif">session ends.</span></h1>
+          <p class="lede">MentalCompanion turns your therapist's guidance into a clear, day-to-day plan, supports you through the moments in between, and keeps your therapist in the loop.</p>
+          <p class="ctas">
+            <a class="btn btn-sun" href="https://tally.so/r/0Q2lMy" target="_blank" rel="noopener">Join the waitlist <span class="arrow" aria-hidden="true">→</span></a>
+            <a class="btn btn-outline" href="https://calendly.com/makindeayoola/mentalcompanion-conversation" target="_blank" rel="noopener">Book a conversation</a>
+          </p>
+        </div>
+
+        <div class="stage">
+          <img class="hero-photo" src="images/hero.jpg" alt="A smiling woman checking her phone at a café table">
+
+          <!-- Example: a parent supporting their autistic teenage son between his therapy sessions -->
+          <div class="float" aria-hidden="true">
+            <div class="float-top">
+              <span class="app-icon"><svg width="12" height="12" viewBox="0 0 28 28"><circle cx="10" cy="14" r="9" fill="#FFC53D"></circle><circle cx="18" cy="14" r="9" fill="#FFFFFF" fill-opacity="0.85"></circle></svg></span>
+              <b>MentalCompanion</b>
+              <span>now</span>
+            </div>
+            <strong>Leo's recap is ready for his therapist</strong>
+            <div class="stats">
+              <p><b>2</b><span>routine changes handled</span></p>
+              <p><b>4</b><span>breaks asked for</span></p>
+              <p><b>1</b><span>hard evening, worked through</span></p>
+            </div>
+          </div>
+
+          <div class="phone" aria-hidden="true">
+            <div class="screen">
+              <div class="island"></div>
+              <div class="statusbar">
+                <span>9:41</span>
+                <svg width="46" height="11" viewBox="0 0 46 11"><rect x="0" y="7" width="3" height="4" rx="1" fill="#120B33"></rect><rect x="4.5" y="5" width="3" height="6" rx="1" fill="#120B33"></rect><rect x="9" y="2.5" width="3" height="8.5" rx="1" fill="#120B33"></rect><rect x="13.5" y="0" width="3" height="11" rx="1" fill="#120B33"></rect><rect x="22" y="1" width="20" height="9" rx="2.5" fill="none" stroke="#120B33" stroke-opacity="0.5"></rect><rect x="23.5" y="2.5" width="14" height="6" rx="1.5" fill="#120B33"></rect><rect x="43" y="3.5" width="1.6" height="4" rx="0.8" fill="#120B33" fill-opacity="0.5"></rect></svg>
+              </div>
+
+              <div class="app-head">
+                <span class="avatar">L</span>
+                <div>
+                  <strong>Leo's plan</strong>
+                  <span>Day 18 since his last session</span>
+                </div>
+                <span class="bell"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 2a4 4 0 0 0-4 4v3l-1.5 2.5h11L12 9V6a4 4 0 0 0-4-4zM6.5 13.5a1.5 1.5 0 0 0 3 0" fill="none" stroke="#120B33" stroke-width="1.4" stroke-linejoin="round"></path></svg></span>
+              </div>
+
+              <div class="today">
+                <span class="ring"><b>2/3</b></span>
+                <div>
+                  <strong>Thursday, nice going</strong>
+                  <span>2 of today's 3 steps done</span>
+                </div>
+              </div>
+
+              <ul class="tasks">
+                <li class="task done">
+                  <span class="task-icon" style="background: #E9E4FF">📅</span>
+                  <div><strong>Show tomorrow's schedule</strong><span>Every evening · 7 pm</span></div>
+                  <span class="tick"></span>
+                </li>
+                <li class="task done">
+                  <span class="task-icon" style="background: #DDF6EE">🎧</span>
+                  <div><strong>20 quiet minutes after school</strong><span>Headphones, own room</span></div>
+                  <span class="tick"></span>
+                </li>
+                <li class="task">
+                  <span class="task-icon" style="background: #FFF1CC">✋</span>
+                  <div><strong>Practice the break card</strong><span>5 minutes, together</span></div>
+                  <span class="tick"></span>
+                </li>
+              </ul>
+
+              <p class="chat-label">Companion</p>
+              <p class="msg me">His school trip moved to tomorrow and he's really upset.</p>
+              <p class="msg bot">Sudden changes are hard for Leo, and his plan covers this. Walk through tomorrow's new schedule together tonight, and pack his headphones.</p>
+              <div class="chips"><span>Remind me at 7</span><span>Talk it through</span></div>
+
+              <div class="composer">
+                <span>Message, or hold to talk</span>
+                <span class="mic"><svg width="12" height="12" viewBox="0 0 14 14"><rect x="4.5" y="1" width="5" height="8" rx="2.5" fill="#FFFFFF"></rect><path d="M2.5 6.5a4.5 4.5 0 0 0 9 0M7 11v2" fill="none" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"></path></svg></span>
+              </div>
+              <span class="home-bar"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <main>
+      <!-- The problem: the long gap between sessions -->
+      <div class="gap-band">
+        <section class="wrap gap">
+          <h2><span class="hour">1 hour</span> in session. <span class="serif">Weeks, sometimes months, on your own.</span></h2>
+          <div class="timeline" aria-hidden="true">
+            <div class="bar"><span class="session first"></span><span class="session next"></span></div>
+            <p class="gap-label">Days, weeks, or months in between</p>
+          </div>
+          <p>Guidance from that one hour fades, situations come up that no one anticipated, and the next session starts from memory. MentalCompanion is built for all the time in between.</p>
+        </section>
+      </div>
+
+      <!-- How it works -->
+      <section class="wrap section">
+        <div class="section-head">
+          <p class="eyebrow">How it works</p>
+          <h2>From one session to everything in between, <span class="serif">and back again.</span></h2>
+        </div>
+        <ol class="steps">
+          <li class="step">
+            <span class="step-num"></span>
+            <h3>Your therapist's guidance comes in</h3>
+            <p>From AI session notes, or notes your therapist already takes in the tools they use today.</p>
+          </li>
+          <li class="step">
+            <span class="step-num"></span>
+            <h3>It becomes a plan you can follow</h3>
+            <p>Concrete daily steps and reminders. When something comes up that the plan didn't cover, the companion helps you through it, building on what your therapist set.</p>
+          </li>
+          <li class="step">
+            <span class="step-num"></span>
+            <h3>Your therapist sees how it went</h3>
+            <p>What came up, what helped, and what happened next. The next session starts from what really happened, not from memory.</p>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Who it's for -->
+      <section class="wrap section">
+        <div class="section-head">
+          <p class="eyebrow">Who it's for</p>
+          <h2>Built for everyone <span class="serif">in someone's corner.</span></h2>
+        </div>
+        <div class="people">
+          <article class="person">
+            <img src="images/people.jpg" alt="A man sitting on a porch step, laughing" style="object-position: center 70%">
+            <span class="tag tag-violet">Individuals</span>
+            <h3>People in therapy</h3>
+            <p>Support between sessions, by voice or text, any time. A plan that adapts as things change. No therapist yet? Start on your own and explore booking one when you're ready.</p>
+            <p class="gets">Know what to do on a hard night, not just in your therapist's office.</p>
+          </article>
+          <article class="person">
+            <img src="images/family.jpg" alt="A father and his young son smiling together on a sofa">
+            <span class="tag tag-sun">Families</span>
+            <h3>Families &amp; support people</h3>
+            <p>With the patient's permission, a parent, partner, or friend gets specific steps they can take, not just a phone number to call in an emergency.</p>
+            <p class="gets">A few things a parent can do each day to help their child's progress.</p>
+          </article>
+          <article class="person">
+            <img src="images/therapist.jpg" alt="A therapist taking notes while listening to a client">
+            <span class="tag tag-mint">Clinicians</span>
+            <h3>Therapists &amp; clinics</h3>
+            <p>See trends across your whole caseload, run group sessions, and walk into each session knowing how things went since the last one. You approve each plan before your client sees it.</p>
+            <p class="gets">Works alongside the note and practice tools you already use.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Commitments: mint band -->
+      <div class="trust-band">
+        <section class="wrap section">
+          <div class="section-head">
+            <p class="eyebrow">Care you can trust</p>
+            <h2>What we're building toward</h2>
+          </div>
+          <ul class="trust">
+            <li>
+              <h3>Alongside your therapist</h3>
+              <p>MentalCompanion extends your therapist's care. It doesn't replace it.</p>
+            </li>
+            <li>
+              <h3>Private by default</h3>
+              <p>You decide who sees what, and you can change it whenever you like.</p>
+            </li>
+            <li>
+              <h3>Within the rules where you live</h3>
+              <p>What the companion does follows the law in your state or province.</p>
+            </li>
+          </ul>
+        </section>
+      </div>
+
+      <!-- Get involved: violet band -->
+      <div class="join-band" id="join">
+        <section class="wrap join">
+          <img class="join-photo" src="images/together.jpg" alt="A mother and daughter hugging and smiling at home">
+          <div class="join-copy">
+            <p class="eyebrow" style="color: var(--sun)">Get involved</p>
+            <h2>Help us build it <span class="serif">with you.</span></h2>
+            <p>We're early, and we're building this with the people who'll use it.</p>
+            <div class="options">
+              <article class="option">
+                <div class="option-head">
+                  <h3>Talk to us</h3>
+                  <span class="meta">1 hour · video or phone</span>
+                </div>
+                <p>We're speaking with therapists, clinic leaders, people in therapy, and parents and caregivers.</p>
+                <p><a class="btn btn-sun btn-small" href="https://calendly.com/makindeayoola/mentalcompanion-conversation" target="_blank" rel="noopener">Book a conversation <span class="arrow" aria-hidden="true">→</span></a></p>
+              </article>
+              <article class="option">
+                <div class="option-head">
+                  <h3>Join the waitlist</h3>
+                  <span class="meta">Under a minute</span>
+                </div>
+                <p>Be first to hear when early access opens.</p>
+                <p><a class="btn btn-white btn-small" href="https://tally.so/r/0Q2lMy" target="_blank" rel="noopener">Join the waitlist <span class="arrow" aria-hidden="true">→</span></a></p>
+              </article>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <p class="crisis"><strong>If you're in crisis, get help now.</strong> Call or text 988 in the US or Canada, or call your local emergency number. MentalCompanion is in development and isn't a crisis or emergency service.</p>
+        <p>© 2026 MentalCompanion</p>
+        <p class="credit">Photos from <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a>.</p>
+      </div>
+    </footer>
+  </body>
+</html>
